@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register</title>
+  <link rel="shortcut icon" type="image/png" href="/static/admin/assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="/static/admin/assets/css/styles.min.css" />
+
+  <style>
+    body {
+      overflow: hidden; /* Prevents horizontal scrollbars */
+      height: 100vh; /* Full viewport height */
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(45deg, #7ed56f, #28b485, #28b4d9, #7e8df4, #7ed56f, #28b485, #28b4d9, #7e8df4);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .page-wrapper {
+      width: 100%;
+      position: relative;
+    }
+
+    .card {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="position-relative overflow-hidden min-vh-100 d-flex align-items-center justify-content-center">
+      <div class="w-100">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6 col-xxl-4">
+            {% if msg|length %}
+              <div class="alert alert-info">
+                {{msg}}
+              </div>
+            {% endif %}
+            <div class="card mb-0">
+              <div class="card-body">
+                <a href="{{url_for('index')}}" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                  <h2>Register</h2>
+                </a>
+                <p class="text-center">Sign up to create account</p>
+                <form action="{{url_for('register')}}" method="post">
+                  <div class="mb-3">
+                    <label for="exampleInputtext1" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp" name="name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Mobile</label>
+                    <input type="tel" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="mobile">
+                  </div>
+                  <div class="mb-4">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                  </div>
+                  <button type="submit" class="btn btn-primary d-block mx-auto">Signup</button>
+                  <br>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
+                    <a class="text-primary fw-bold ms-2" href="{{url_for('login')}}">Sign In</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/static/admin/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/static/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

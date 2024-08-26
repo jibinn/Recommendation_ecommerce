@@ -1,0 +1,65 @@
+{% extends "dashboard-layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.post(
+            '/status',
+            function(response){
+                location.href = '/inactive'
+            }
+        );
+    });
+</script>
+   <script>
+    $(document).ready(function() {
+        $('#togglePassword').click(function() {
+            var passwordInput = $('#passwordInput');
+            var type = passwordInput.attr('type');
+            if (type === 'password') {
+            passwordInput.attr('type', 'text');
+            $('#togglePassword i').removeClass('bx-show').addClass('bx-hide');
+            } else {
+            passwordInput.attr('type', 'password');
+            $('#togglePassword i').removeClass('bx-hide').addClass('bx-show');
+            }
+        });
+    });
+
+   </script>
+    <div class="container mt-5">
+        {% if msg|length %}
+            <div class="alert alert-info">
+                {{msg}}
+            </div>
+        {% endif %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Update Profile</h5>
+        <form action="{{url_for('profile')}}" method="post">
+          <div class="mb-3">
+            <label for="inputText" class="form-label">Name</label>
+            <input type="text" class="form-control" name="user_name" value="{{user_data.name}}">
+          </div>
+          <div class="mb-3">
+            <label for="inputText" class="form-label">Email</label>
+            <input type="email" class="form-control" name="user_email" value="{{user_data.email}}">
+          </div>
+          <div class="mb-3">
+            <label for="inputText" class="form-label">Pssword</label>
+            <input type="password" class="form-control" name="user_password" value="{{user_data.password}}" id="passwordInput">
+            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                <i class="bx bx-show"></i>
+            </button>
+          </div>
+          <div class="mb-3">
+            <label for="inputText" class="form-label">mobile</label>
+            <input type="tel" class="form-control" name="user_mobile" value="{{user_data.mobile}}">
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin: auto;display: block;">Submit</button><br/>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

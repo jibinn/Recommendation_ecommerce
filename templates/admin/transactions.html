@@ -1,0 +1,53 @@
+{%extends "admin/admin_layout.html" %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between;">
+            <h5 class="card-title fw-semibold mb-4">Transactions</h5>
+          </div><br/>     
+          <div class="card">
+            <div class="card-body">
+                {% if transactions_count %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <th>#</th>
+                            <th>Transaction ID</th>
+                            <th>User Name</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                                {% set product = getProductDataById(transaction.product_id) %}
+                                {% set user = getUserDataById(transaction.user_id) %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ transaction.txn_id }}</td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ transaction.quantity }}</td>
+                                    <td>&#8377; {{ transaction.quantity|int * product.price|int }}</td>
+                                    <td>{{ transaction.date }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <h6 class="text-center">No transaction found.</h6>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

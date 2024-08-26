@@ -1,0 +1,43 @@
+{% extends "dashboard-layout.html" %} {% block title %}Recommendations{% endblock %} {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.post("/status", function (response) {
+            location.href = "/inactive";
+        });
+    });
+</script>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Recommended Products</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Product Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>
+                                <a href="/product/{{product[0]}}" style="color: black" target="_blank">{{product[1]}}</a>
+                            </td>
+                            <td>{{getCategoryNameById(product[2])}}</td>
+                            <td>&#8364; {{product[3]}}</td>
+                            <td><img src="/static/uploads/{{product[4]}}" style="width: 100px; height: 100px" /></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

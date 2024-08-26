@@ -1,0 +1,385 @@
+{%extends "layout.html" %} {% block title %}Product | {{product_data.name}}{% endblock %} {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.post("/status", function (response) {
+            location.href = "/inactive";
+        });
+    });
+</script>
+<script>
+    function addToRelatedCart(product_id, quantity) {
+        $.post("/addToCart", { product_id: product_id, quantity: quantity }, function (response) {
+            $("#modalBody").html(response);
+            $("#myModal").modal("show");
+            $.post("/userCartAddedItems", function (response) {
+                console.log(response);
+                $("#user-cart-items").html(response.total_rows);
+            });
+        });
+    }
+    function addRelatedFavorite(product_id) {
+        $.post("/addFavorite", "product_id=" + product_id, function (response) {
+            console.log(response);
+            $("#modalBody").html(response);
+            $("#myModal").modal("show");
+        });
+    }
+    function addToCart(product_id) {
+        var quantity = $("#var-value").text();
+        $.post("/addToCart", { product_id: product_id, quantity: quantity }, function (response) {
+            $("#modalBody").html(response);
+            $("#myModal").modal("show");
+            $.post("/userCartAddedItems", function (response) {
+                console.log(response);
+                $("#user-cart-items").html(response.total_rows);
+            });
+        });
+    }
+    function addRating(product_id) {
+        $.post("/addRating", { product_id: product_id }, function (response) {
+            console.log(response);
+            if (response == "1") {
+                $("#rating-product-id").val(product_id);
+                $("#myModal2").modal("show");
+            }
+            if (response == "2") {
+                $("#modalBody").html("Please login to rate the product.");
+                $("#myModal").modal("show");
+            }
+            if (response == "3") {
+                $("#modalBody").html("You have already rated the product.");
+                $("#myModal").modal("show");
+            }
+            if (response == "4") {
+                $("#modalBody").html("Your order is not complete. After completion you can rate the product.");
+                $("#myModal").modal("show");
+            }
+        });
+    }
+    function addReview(product_id) {
+        $.post("/addReview", { product_id: product_id }, function (response) {
+            console.log(response);
+            if (response == "1") {
+                $("#review-product-id").val(product_id);
+                $("#myModal3").modal("show");
+            }
+            if (response == "2") {
+                $("#modalBody").html("Please login to give review for the product.");
+                $("#myModal").modal("show");
+            }
+            if (response == "3") {
+                $("#modalBody").html("You have already reviewed the product.");
+                $("#myModal").modal("show");
+            }
+            if (response == "4") {
+                $("#modalBody").html("Your order is not complete. After completion you can review the product.");
+                $("#myModal").modal("show");
+            }
+        });
+    }
+</script>
+<!-- Open Content -->
+<section class="bg-light">
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-lg-5 mt-5">
+                <div class="card mb-3">
+                    <img
+                        class="card-img img-fluid"
+                        src="/static/uploads/{{product_data.thumbnail}}"
+                        alt="Card image cap"
+                        id="product-detail"
+                    />
+                </div>
+            </div>
+            <!-- col end -->
+            <div class="col-lg-7 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="h2">{{product_data.name}}</h1>
+                        <p class="h3 py-2">&#8364; {{product_data.price}}</p>
+                        <p class="py-2">
+                            {% set rating = getProductRatingId(product_data.id) %} {% set reviews, reviews_row_count =
+                            getProductReviewId(product_data.id) %} {% if rating == 1 %}
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            {% elif raing == 2 %}
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            {% elif rating == 3 %}
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            {% elif rating == 4 %}
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            {% elif rating == 5 %}
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            {% else %}
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            {% endif %}
+                            <span class="list-inline-item text-dark"
+                                ><span style="cursor: pointer" onclick="addRating({{product_data.id}})"
+                                    >Rating {{getProductRatingId(product_data.id)}}</span
+                                >
+                                |
+                                <span style="cursor: pointer" onclick="addReview({{product_data.id}})"
+                                    >{{reviews_row_count}} Review(s)</span
+                                ></span
+                            >
+                        </p>
+
+                        <h6>Description:</h6>
+                        <p>{{product_data.description}}</p>
+                        <input type="hidden" name="product-title" value="Activewear" />
+                        <div class="row">
+                            <div class="col-auto">
+                                <ul class="list-inline pb-3">
+                                    <li class="list-inline-item text-right">
+                                        Quantity
+                                        <input type="hidden" name="product-quanity" id="product-quanity" value="1" />
+                                    </li>
+                                    <li class="list-inline-item"><span class="btn btn-success" id="btn-minus">-</span></li>
+                                    <li class="list-inline-item">
+                                        <span class="badge bg-secondary" id="var-value">1</span>
+                                    </li>
+                                    <li class="list-inline-item"><span class="btn btn-success" id="btn-plus">+</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row pb-3">
+                            <div class="col d-grid">
+                                <button
+                                    type="submit"
+                                    class="btn btn-success btn-lg"
+                                    onclick="addToCart({{product_data.id}})"
+                                >
+                                    Add To Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Close Content -->
+
+<!-- Start Article -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-left p-2 pb-3">
+            <h4>Related Products</h4>
+        </div>
+
+        <!--Start Carousel Wrapper-->
+        <div id="carousel-related-product" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for related_product in related_products %} {% if loop.index % 4 == 1 %}
+                <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+                    <div class="row">
+                        {% endif %}
+                        <div class="col-md-3">
+                            <div class="p-2 pb-3">
+                                <!-- Product content here -->
+                                <!-- Product content here -->
+                                <div class="product-wap card rounded-0">
+                                    <div class="card rounded-0">
+                                        <img
+                                            class="card-img rounded-0 img-fluid"
+                                            src="/static/uploads/{{related_product.thumbnail}}"
+                                        />
+                                        <div
+                                            class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center"
+                                        >
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <a
+                                                        class="btn btn-success text-white"
+                                                        onclick="addRelatedFavorite({{related_product.id}})"
+                                                        ><i class="far fa-heart"></i
+                                                    ></a>
+                                                </li>
+                                                <li>
+                                                    <a
+                                                        class="btn btn-success text-white mt-2"
+                                                        onclick="addToRelatedCart({{related_product.id}},1)"
+                                                        ><i class="fas fa-cart-plus"></i
+                                                    ></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="/product/{{related_product.id}}" class="h3 text-decoration-none"
+                                            >{{related_product.name}}</a
+                                        >
+                                        <ul class="list-unstyled d-flex justify-content-center mb-1">
+                                            <li>
+                                                {% set related_rating = getProductRatingId(related_product.id) %} {% if
+                                                related_rating == 1 %}
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                {% elif related_rating == 2 %}
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                {% elif related_rating == 3 %}
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                {% elif related_rating == 4 %}
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                {% elif related_rating == 5 %}
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                {% else %}
+                                                <i class="fa fa-star text-warning"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                <i class="fa fa-star text-secondary"></i>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                        <p class="text-center mb-0">&#8364; {{related_product.price}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if loop.index % 4 == 0 or loop.last %}
+                    </div>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <a
+                    href="/category/{{product_data.category_id}}"
+                    class="btn btn-success btn-lg"
+                    style="margin: auto; display: block"
+                    >View More</a
+                >
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+</section>
+<!-- End Article -->
+<!-- Reviews of Product -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-left p-2 pb-3">
+            <h4>Reviews</h4>
+        </div>
+        {% for review in reviews %} {% set review_user_data = getUserDataById(review.user_id) %}
+        <div class="row border rounded p-3 mb-4">
+            <div class="col-md-3">
+                <img src="/static/img/user.png" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 10%" />
+            </div>
+            <div class="col-md-9">
+                <h5>{{ review_user_data.name }}</h5>
+                <p class="mb-0">{{ review.review }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<!-- End of Reviews of product -->
+<!-- Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-sm bg-primary">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="font-size: 13px"></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal" id="myModal2">
+    <div class="modal-dialog modal-sm bg-primary">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="font-size: 13px"></button>
+            </div>
+            <div class="modal-body" id="modalBody2">
+                <form action="{{url_for('rate_product')}}" method="post">
+                    <div class="form-group">
+                        <label>Enter your rating</label>
+                        <input type="number" class="form-control" name="rating_p" min="1" max="5" />
+                        <input type="hidden" id="rating-product-id" name="rating_pid" />
+                        <br /><button type="submit" class="btn btn-primary" style="margin: auto; display: block">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal" id="myModal3">
+    <div class="modal-dialog modal-sm bg-primary">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="font-size: 13px"></button>
+            </div>
+            <div class="modal-body" id="modalBody3">
+                <form action="{{url_for('review_product')}}" method="post">
+                    <div class="form-group">
+                        <label>Enter your review</label>
+                        <textarea class="form-control" name="review_p"></textarea>
+                        <input type="hidden" id="review-product-id" name="review_pid" />
+                        <br /><button type="submit" class="btn btn-primary" style="margin: auto; display: block">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

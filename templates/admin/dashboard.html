@@ -1,0 +1,39 @@
+{% extends "admin/admin_layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% for transaction in recent_transactions %}
+        {% set user = getUserDataById(transaction.user_id) %}
+        {% set product = getProductDataById(transaction.product_id) %}
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-semibold mb-4">Transaction {{ loop.index }}</h5>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap mb-0 align-middle">
+                            <tbody>
+                                <tr>
+                                    <td><h6 class="fw-semibold mb-0">Id</h6></td>
+                                    <td><p class="mb-0 fw-normal">{{ loop.index }}</p></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-semibold mb-0">Name</h6></td>
+                                    <td><p class="mb-0 fw-normal">{{ user.name }}</p></td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-semibold mb-0">Amount</h6></td>
+                                    <td><h6 class="fw-semibold mb-0 fs-4">&#8377; {{ transaction.quantity|int * product.price|int }}</h6></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

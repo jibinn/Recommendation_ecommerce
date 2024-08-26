@@ -1,0 +1,58 @@
+{% extends "dashboard-layout.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.post(
+            '/status',
+            function(response){
+                location.href = '/inactive'
+            }
+        );
+    });
+</script>
+  <div class="container mt-5">
+    {% if msg|length %}
+        <div class="alert alert-info">
+            {{msg}}
+        </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Orders</h5>
+        {% if orders_count %}
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Order ID</th>
+                  <th>Transaction ID</th>
+                  <th>Product Name</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                  {% set product = getProductDataById(order.product_id) %}
+                  <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{order.order_id}}</td>
+                    <td>TXN{{order.txn_id}}</td>
+                    <td><a href="/product/{{product.id}}" target="_blank">{{product.name}}</a></td>
+                    <td>{{order.date}}</td>
+                    <td>{{order.status}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <h6 class="text-center">No orders.</h6>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

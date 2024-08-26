@@ -1,0 +1,41 @@
+{%extends "admin/admin_layout.html" %}
+{% block title %}Edit Category{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between;">
+            <h5 class="card-title fw-semibold mb-4">Edit Category</h5>
+          </div><br/>          
+          <div class="card">
+            <div class="card-body">
+              {% if msg|length %}
+              <div class="alert alert-warning" role="alert">
+                {{msg}}
+              </div>
+              {% endif %}
+              <form action="{{url_for('admin_update_category')}}" method="post" enctype="multipart/form-data">
+                  <div class="form-group">
+                      <label>Category Name</label>
+                      <input type="text" class="form-control" name="category_name" value="{{category_data.name}}">
+                  </div><br/>
+                  <div class="form-group">
+                      <label>Category Image</label><br>
+                      <img src="/static/uploads/{{category_data.thumbnail}}" style="width:100px;height:100px;">
+                      <input type="file" class="form-control" name="category_file">
+                  </div><br/>
+                  <div class="form-group">
+                      <label>Category Description</label>
+                      <textarea class="form-control" name="category_desc">{{category_data.description}}</textarea>
+                  </div><br>
+                  <input type="hidden" value="{{category_data.id}}" name="category_id">
+                  <button type="submit" class="btn btn-primary" style="margin: auto;display: block;">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

@@ -1,0 +1,53 @@
+{%extends "admin/admin_layout.html" %}
+{% block title %}Edit Product{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between;">
+            <h5 class="card-title fw-semibold mb-4">Edit Product</h5>
+          </div><br/>          
+          <div class="card">
+            <div class="card-body">
+              {% if msg|length %}
+              <div class="alert alert-warning" role="alert">
+                {{msg}}
+              </div>
+              {% endif %}
+              <form action="{{url_for('admin_update_product')}}" method="post" enctype="multipart/form-data">
+                  <div class="form-group">
+                      <label>Product Name</label>
+                      <input type="text" class="form-control" name="product_name" value="{{product_data.name}}">
+                  </div><br/>
+                  <div class="form-group">
+                    <label>Product Category</label>
+                    <select name="product_category" class="form-control">
+                        {% for category in categories %}
+                            <option value="{{category.id}}">{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                      <label>Product Image</label><br/>
+                      <img src="/static/uploads/{{product_data.thumbnail}}" style="width:100px;height:100px;">
+                      <input type="file" class="form-control" name="product_file">
+                  </div><br/>
+                  <div class="form-group">
+                      <label>Product Description</label>
+                      <textarea class="form-control" name="product_desc">{{product_data.description}}</textarea>
+                  </div><br>
+                  <div class="form-group">
+                    <label>Product Price</label>
+                    <input type="number" min="0" class="form-control" name="product_price" value="{{product_data.price}}">
+                  </div>
+                  <input type="hidden" name="product_id" value="{{product_data.id}}">
+                  <button type="submit" class="btn btn-primary" style="margin: auto;display: block;">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

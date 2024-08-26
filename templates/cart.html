@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+{% block title %}Cart{% endblock %}
+{% block content %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.post(
+            '/status',
+            function(response){
+                location.href = '/inactive'
+            }
+        );
+    });
+</script>
+<script>
+    function addQuantity(product_id) {
+        var quantity = $("#"+product_id+"-var-value").text();
+        var quantity = parseInt(quantity);
+        quantity += 1;
+        $.post(
+            '/setCartItemQuantity',
+            {product_id:product_id, quantity:quantity},
+            function(response)
+            {
+                $("#sb-btn").text('Proceed to buy all ' + response.total_cart_items + ' item(s)')
+                $("#user-cart-items").text(response.total_cart_items);
+                console.log('item added');
+            }
+        );
+        $("#"+product_id+"-var-value").text(quantity);
+    }
+    function subQuantity(product_id) {
+        var quantity = $("#"+product_id+"-var-value").text();
+        var quantity = parseInt(quantity);
+        if (quantity == 1)
+        {
+            $("#"+product_id+"-var-value").text(quantity);
+            $.post(
+                '/setCartItemQuantity',
+                {product_id:product_id, quantity:quantity},
+                function(response)
+                {
+                    $("#sb-btn").text('Proceed to buy all ' + response.total_cart_items + ' item(s)')
+                    $("#user-cart-items").text(response.total_cart_items);
+                    console.log('item removed');
+                }
+            );
+        }
+        else{
+            quantity -= 1;
+            console.log(quantity);
+            $("#"+product_id+"-var-value").text(quantity);
+            $.post(
+                '/setCartItemQuantity',
+                {product_id:product_id, quantity:quantity},
+                function(response)
+                {
+                    $("#sb-btn").text('Proceed to buy all ' + response.total_cart_items + ' item(s)')
+                    $("#user-cart-items").text(response.total_cart_items);
+                    console.log('item removed');
+                }
+            );
+        }
+    }
+    function removeItem(product_id)
+    {
+        $.post(
+            '/removeCartItem',
+            {product_id:product_id},
+            function(response)
+            {
+                console.log(response.status);
+                if (response.status == '1')
+                {
+                    location.reload();
+                }
+            }
+        );
+    }
+    function buy()
+    {
+        location.href='/buy'
+    }
+</script>
+<section class="py-5">
+    <div class="container">
+        {% if msg|length %}
+            <div class="alert alert-info">
+            {{msg}}
+            </div>
+        {% endif %}
+        <div class="row text-left p-2 pb-3">
+            <h4>Cart</h4>
+        </div>
+        {% if items %}
+            {% for item in items %}
+                {% set product = getProductDataById(item.product_id) %}
+                <div class="row">
+                    <div class="col-lg-5 mt-5">
+                        <div class="card mb-3">
+                            <img class="card-img img-fluid" src="/static/uploads/{{product.thumbnail}}" alt="Card image cap" id="product-detail">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h1 class="h2">{{product.name}}</h1>
+                                <p class="h3 py-2">&#8377; {{product.price}}</p>
+                                <p class="py-2">
+                                    <i class="fa fa-star text-warning"></i>
+                                    <i class="fa fa-star text-warning"></i>
+                                    <i class="fa fa-star text-warning"></i>
+                                    <i class="fa fa-star text-warning"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <span class="list-inline-item text-dark">Rating 4.8 | 36 Comments</span>
+                                </p>
+    
+                                <h6>Description:</h6>
+                                <p>{{product.description}}</p>
+                                <input type="hidden" name="product-title" value="Activewear">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <ul class="list-inline pb-3">
+                                            <li class="list-inline-item text-right">
+                                                Quantity
+                                                <input type="hidden" name="product-quanity" id="product-quanity" value="{{item.quantity}}">
+                                            </li>
+                                            <li class="list-inline-item"><span class="btn btn-primary" onclick="subQuantity({{product.id}})">-</span></li>
+                                            <li class="list-inline-item"><span class="badge bg-secondary" id="{{product.id}}-var-value">{{item.quantity}}</span></li>
+                                            <li class="list-inline-item"><span class="btn btn-primary" onclick="addQuantity({{product.id}})">+</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row pb-3">
+                                    <div class="col d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg" onclick="removeItem({{product.id}})">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <br/><br/><button type="submit" class="btn btn-primary btn-lg" style="margin:auto;display:block;width:100%;" id="sb-btn" onclick="buy()">Proceed to buy all {{userCartItems()}} Item(s)</button>
+        {% else %}
+            <h5 class="text-center">{{ cartmsg }}</h5>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

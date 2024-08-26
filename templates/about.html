@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}About Us{% endblock %}
+{% block content %} 
+<section class="bg-primary py-5">
+    <div class="container">
+        <div class="row align-items-center py-5">
+            <div class="col-md-8 text-white">
+                <h1>About AIRecoShop</h1>
+                <p>
+                    AIRecoShop is your ultimate destination for premium online shopping. We strive to bring you the best selection of products across various categories, ensuring quality, affordability, and a seamless shopping experience.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <img src="/static/img/eCommerce-Cartoon.png" alt="About Hero" style="max-height: 200px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="container py-5">
+    <div class="row text-center pt-5 pb-3">
+        <div class="col-lg-6 m-auto">
+            <h2 class="h1 text-primary">Our Mission</h2>
+            <p class="text-primary">
+                At AIRecoShop, our mission is to redefine online shopping by providing unparalleled customer service, a wide range of high-quality products, and innovative solutions that enhance your shopping journey.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-6 col-lg-4 pb-5">
+            <div class="h-100 py-5 services-icon-wap shadow">
+                <div class="h1 text-success text-center"><i class="fa fa-truck fa-lg"></i></div>
+                <h2 class="h5 mt-4 text-center">Fast Delivery</h2>
+                <p class="text-center">Experience swift and reliable delivery services that ensure your purchases reach you on time, every time.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 pb-5">
+            <div class="h-100 py-5 services-icon-wap shadow">
+                <div class="h1 text-success text-center"><i class="fas fa-exchange-alt"></i></div>
+                <h2 class="h5 mt-4 text-center">Easy Returns</h2>
+                <p class="text-center">Enjoy hassle-free returns and exchanges, making your shopping experience stress-free and convenient.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 pb-5">
+            <div class="h-100 py-5 services-icon-wap shadow">
+                <div class="h1 text-success text-center"><i class="fa fa-user"></i></div>
+                <h2 class="h5 mt-4 text-center">Customer Satisfaction</h2>
+                <p class="text-center">Our dedicated support team is committed to ensuring your complete satisfaction with every purchase.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .services-icon-wap:hover {
+        background-color: skyblue;
+    }
+    .services-icon-wap:hover .h1 i {
+        color: green;
+    }
+</style>
+
+{% endblock %}

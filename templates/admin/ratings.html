@@ -1,0 +1,88 @@
+{%extends "admin/admin_layout.html" %}
+{% block title %}Product Ratings{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between;">
+            <h5 class="card-title fw-semibold mb-4">Products</h5>
+          </div><br/>          
+          <div class="card">
+            <div class="card-body">
+                {% if ratings_count %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <th>#</th>
+                            <th>Product Name</th>
+                            <th>Product Image</th>
+                            <th>User Name</th>
+                            <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rating in ratings %}
+                                {% set product = getProductDataById(rating.product_id) %}
+                                {% set user = getUserDataById(rating.user_id) %}
+                            <tr>
+                                <td>{{loop.index}}</td>
+                                <td>{{product.name}}</td>
+                                <td><img src="/static/uploads/{{product.thumbnail}}" style="width:100px;height:100px;"></td>
+                                <td>{{user.name}}</td>
+                                <td>
+                                    {% if rating.rating == 1 %}
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                    {% elif rating.rating == 2 %}
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                    {% elif rating.rating == 3 %}
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                    {% elif rating.rating == 4 %}
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                    {% elif rating.rating == 5 %}
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                    {% else %}
+                                        <i class="fa fa-star text-warning"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                        <i class="fa fa-star text-secondary"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <h6>No Ratings for products.</h6>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

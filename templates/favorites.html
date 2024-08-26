@@ -1,0 +1,72 @@
+{% extends "dashboard-layout.html" %}
+{% block title %}Favorites{% endblock %}
+{% block content %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.post(
+            '/status',
+            function(response){
+                location.href = '/inactive'
+            }
+        );
+    });
+</script>
+  <script>
+    function removeFavorite(product_id)
+    {
+      $.post(
+        '/removeFavorite',
+        {product_id:product_id},
+        function(response)
+        {
+          if (response == '1')
+          {
+            location.reload();
+          }
+        }
+      );
+    }
+  </script>
+  <div class="container mt-5">
+    {% if msg|length %}
+        <div class="alert alert-info">
+            {{msg}}
+        </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Favorites</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Product Image</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for favorite in favorites %}
+                    {% set product = getProductDataById(favorite.product_id) %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td><a href="/product/{{product.id}}" style="color:black;" target="_blank">{{product.name}}</a></td>
+                        <td>{{getCategoryNameById(product.category_id)}}</td>
+                        <td>&#8377; {{product.price}}</td>
+                        <td><img src="/static/uploads/{{product.thumbnail}}" style="width:100px;height:100px;"></td>
+                        <td>
+                          <button class="btn btn-danger" onclick="removeFavorite({{product.id}})"><i class='bx bx-trash'></i></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

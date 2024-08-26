@@ -1,0 +1,49 @@
+{%extends "admin/admin_layout.html" %}
+{% block title %}Product Reviews{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between;">
+            <h5 class="card-title fw-semibold mb-4">Products</h5>
+          </div><br/>          
+          <div class="card">
+            <div class="card-body">
+                {% if reviews_count %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <th>#</th>
+                            <th>Product Name</th>
+                            <th>Product Image</th>
+                            <th>User Name</th>
+                            <th>Review</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for review in reviews %}
+                                {% set product = getProductDataById(review.product_id) %}
+                                {% set user = getUserDataById(review.user_id) %}
+                            <tr>
+                                <td>{{loop.index}}</td>
+                                <td>{{product.name}}</td>
+                                <td><img src="/static/uploads/{{product.thumbnail}}" style="width:100px;height:100px;"></td>
+                                <td>{{user.name}}</td>
+                                <td>{{review.review}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <h6>No reviews for the products.</h6>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

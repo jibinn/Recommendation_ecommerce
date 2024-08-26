@@ -1,0 +1,82 @@
+{%extends "layout.html" %}
+{% block title %}Buy{% endblock %}
+{% block content %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.post(
+            '/status',
+            function(response){
+                location.href = '/inactive'
+            }
+        );
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#cardNumber').on('input', function() {
+            var cardNumber = $(this).val().replace(/-/g, ''); // Remove existing '-' if any
+            var formattedNumber = '';
+            for (var i = 0; i < cardNumber.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedNumber += '-';
+                }
+                formattedNumber += cardNumber.charAt(i);
+            }
+            $(this).val(formattedNumber);
+        });
+    });
+</script>
+<section class="py-5">
+    <div class="container">
+        {% if msg|length %}
+            <div class="alert alert-info">
+                {{msg}}
+            </div>
+        {% endif %}
+        <div class="row text-left p-2 pb-3">
+            <h4>Buy</h4>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mt-5">
+                <div class="card border-primary">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Enter Debit Card Details</h5>
+                        <form action="{{url_for('buy')}}" method="post">
+                            <!-- Debit card form fields here -->
+                            <div class="mb-3">
+                                <label for="cardNumber" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter card number">
+                            </div>                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="expiryDate" class="form-label">Card Expiry</label>
+                                    <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/YY">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="password" class="form-control" id="cvv" name="cvv" placeholder="CVV">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cardHolderName" class="form-label">Cardholder Name</label>
+                                <input type="text" class="form-control" id="cardHolderName" name="cardHolderName" placeholder="Enter cardholder name">
+                            </div>
+                            <!-- Other debit card form fields here -->
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">Total Amount: &#8377; {{total_price}}</h5>
+                        <p class="card-text">Total Items: {{total_items}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>               
+    </div>
+</section>
+{% endblock %}

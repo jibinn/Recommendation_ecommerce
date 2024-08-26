@@ -1,0 +1,85 @@
+{%extends "admin/admin_layout.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between;">
+            <h5 class="card-title fw-semibold mb-4">Users</h5>
+            <a href="{{url_for('admin_add_user')}}" class="btn btn-primary m-1">Add User</a>
+          </div><br/>          
+          <div class="card">
+            <div class="card-body">
+                {% if users_count %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Mobile</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.password }}</td>
+                                <td>{{ user.mobile }}</td>
+                                <td>
+                                  {% if user.status == 1 %}
+                                    <span class="badge bg-success">Active</span>
+                                  {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                  {% endif %}
+                                </td>
+                                <td>
+                                <a href="/admin/editUser/{{ user.id }}" class="btn btn-secondary m-1" data-toggle="tooltip" title="Edit user">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                    <path d="M16 5l3 3"></path>
+                                    </svg>
+                                </a>
+                                  {% if user.status == 1 %}
+                                  <a href="/admin/deleteUser/{{ user.id }}" class="btn btn-warning m-1" data-toggle="tooltip" title="Delete user">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                      <path d="M4 7l16 0"></path>
+                                      <path d="M10 11l0 6"></path>
+                                      <path d="M14 11l0 6"></path>
+                                      <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                      <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                    </svg>
+                                  </a>
+                                  {% else %}
+                                    <a href="/admin/activeUser/{{ user.id }}" class="btn btn-primary m-1" data-toggle="tooltip" title="Activate user">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                        <path d="M20.205 4.791a5.938 5.938 0 0 0-4.209-1.754A5.906 5.906 0 0 0 12 4.595a5.904 5.904 0 0 0-3.996-1.558 5.942 5.942 0 0 0-4.213 1.758c-2.353 2.363-2.352 6.059.002 8.412L12 21.414l8.207-8.207c2.354-2.353 2.355-6.049-.002-8.416z"></path>
+                                      </svg>
+                                    </a>
+                                  {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <h6 class="text-center">No user found.</h6>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

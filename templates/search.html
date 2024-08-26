@@ -1,0 +1,82 @@
+{%extends "layout.html" %}
+{% block title %}Shop By Category{% endblock %}
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row text-left p-2 pb-3">
+            <h4>Related Products</h4>
+        </div>
+
+        <!-- Start Carousel Wrapper -->
+        <div id="carousel-related-product" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-md-3">
+                                <div class="p-2 pb-3">
+                                    <!-- Product content here -->
+                                    <div class="product-wap card rounded-0">
+                                        <div class="card rounded-0">
+                                            <img class="card-img rounded-0 img-fluid" src="/static/uploads/{{product.thumbnail}}">
+                                        </div>
+                                        <div class="card-body">
+                                            <a href="/product/{{product.id}}" class="h3 text-decoration-none">{{product.name}}</a>
+                                            <ul class="list-unstyled d-flex justify-content-center mb-1">
+                                                <li>
+                                                    {% set related_rating = getProductRatingId(product.id) %}
+                                                    {% if related_rating == 1 %}
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    {% elif related_rating == 2 %}
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    {% elif related_rating == 3 %}
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    {% elif related_rating == 4 %}
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    {% elif related_rating == 5 %}
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    {% endif %}
+                                                </li>
+                                            </ul>
+                                            <p class="text-center mb-0">&#8377; {{product.price}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

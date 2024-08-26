@@ -1,0 +1,217 @@
+{%extends "layout.html" %} {% block title %}Shop By Category{% endblock %} {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.post("/status", function (response) {
+            location.href = "/inactive";
+        });
+    });
+</script>
+<script>
+    function addFavorite(product_id) {
+        $.post("/addFavorite", "product_id=" + product_id, function (response) {
+            console.log(response);
+            $("#modalBody").html(response);
+            $("#myModal").modal("show");
+        });
+    }
+    function addToCart(product_id, quantity) {
+        $.post("/addToCart", { product_id: product_id, quantity: quantity }, function (response) {
+            $("#modalBody").html(response);
+            $("#myModal").modal("show");
+            $.post("/userCartAddedItems", function (response) {
+                console.log(response);
+                $("#user-cart-items").html(response.total_rows);
+            });
+        });
+    }
+    function filterProducts(category_id) {
+        var filter_value = $("#filter-right").val();
+        $.post("/filterProducts", { filter_value: filter_value, category_id: category_id }, function (response) {
+            var data = JSON.parse(response);
+            var products = data.products;
+            var category_name = data.category_name;
+            var category_id = data.category_id;
+
+            var html = "";
+            for (var i = 0; i < products.length; i++) {
+                var product = products[i];
+                html += '<div class="col-md-4">';
+                html += '<div class="card mb-4 product-wap rounded-0">';
+                html += '<div class="card rounded-0">';
+                html += '<img class="card-img rounded-0 img-fluid" src="/static/uploads/' + product.thumbnail + '">';
+                html +=
+                    '<div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">';
+                html += '<ul class="list-unstyled">';
+                html +=
+                    '<li><a class="btn btn-success text-white" onclick="addFavorite(' +
+                    product.id +
+                    ')"><i class="far fa-heart"></i></a></li>';
+                html +=
+                    '<li><a class="btn btn-success text-white mt-2" onclick="addToCart(' +
+                    product.id +
+                    ',1)"><i class="fas fa-cart-plus"></i></a></li>';
+                html += "</ul>";
+                html += "</div>";
+                html += "</div>";
+                html += '<div class="card-body">';
+                html +=
+                    '<a href="/product/' +
+                    product.id +
+                    '" class="h3 text-decoration-none text-center">' +
+                    product.name +
+                    "</a>";
+                html += '<p class="text-center mb-0">&#8364; ' + product.price + "</p>";
+                html += "</div>";
+                html += "</div>";
+                html += "</div>";
+            }
+            $("#display-products-container").html(html);
+        });
+    }
+    function leftFilterProducts(category_id, filter_value) {
+        $.post("/filterProducts", { filter_value: filter_value, category_id: category_id }, function (response) {
+            var data = JSON.parse(response);
+            var products = data.products;
+            var category_name = data.category_name;
+            var category_id = data.category_id;
+
+            var html = "";
+            for (var i = 0; i < products.length; i++) {
+                var product = products[i];
+                html += '<div class="col-md-4">';
+                html += '<div class="card mb-4 product-wap rounded-0">';
+                html += '<div class="card rounded-0">';
+                html += '<img class="card-img rounded-0 img-fluid" src="/static/uploads/' + product.thumbnail + '">';
+                html +=
+                    '<div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">';
+                html += '<ul class="list-unstyled">';
+                html +=
+                    '<li><a class="btn btn-success text-white" onclick="addFavorite(' +
+                    product.id +
+                    ')"><i class="far fa-heart"></i></a></li>';
+                html +=
+                    '<li><a class="btn btn-success text-white mt-2" onclick="addToCart(' +
+                    product.id +
+                    ',1)"><i class="fas fa-cart-plus"></i></a></li>';
+                html += "</ul>";
+                html += "</div>";
+                html += "</div>";
+                html += '<div class="card-body">';
+                html +=
+                    '<a href="/product/' +
+                    product.id +
+                    '" class="h3 text-decoration-none text-center">' +
+                    product.name +
+                    "</a>";
+                html += '<p class="text-center mb-0">&#8364; ' + product.price + "</p>";
+                html += "</div>";
+                html += "</div>";
+                html += "</div>";
+            }
+            $("#display-products-container").html(html);
+        });
+    }
+</script>
+<!-- Start Content -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <h1 class="h2 pb-4">{{category_name}}</h1>
+            {% if products_count %}
+            <ul class="list-unstyled templatemo-accordion">
+                <li class="pb-3">
+                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
+                        Filter
+                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled pl-3">
+                        <li>
+                            <a
+                                class="text-decoration-none"
+                                style="cursor: pointer"
+                                onclick="leftFilterProducts({{category_id}},1)"
+                                >Featured Products</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                class="text-decoration-none"
+                                style="cursor: pointer"
+                                onclick="leftFilterProducts({{category_id}},2)"
+                                >All Products</a
+                            >
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6 pb-4">
+                    <div class="d-flex">
+                        {% if products_count %}
+                        <select class="form-control" id="filter-right" onchange="filterProducts({{category_id}})">
+                            <option value="3">Filter Products</option>
+                            <option value="1">Featured</option>
+                            <option value="2">All</option>
+                        </select>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="display-products-container">
+                {% if products_count %} {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card mb-4 product-wap rounded-0">
+                        <div class="card rounded-0">
+                            <img class="card-img rounded-0 img-fluid" src="/static/uploads/{{product.thumbnail}}" />
+                            <div
+                                class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center"
+                            >
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a class="btn btn-success text-white" onclick="addFavorite({{product.id}})"
+                                            ><i class="far fa-heart"></i
+                                        ></a>
+                                    </li>
+                                    <li>
+                                        <a class="btn btn-success text-white mt-2" onclick="addToCart({{product.id}},1)"
+                                            ><i class="fas fa-cart-plus"></i
+                                        ></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <a href="/product/{{product.id}}" class="h3 text-decoration-none text-center"
+                                >{{product.name}}</a
+                            >
+                            <p class="text-center mb-0">&#8364; {{product.price}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %} {% else %}
+                <h5 class="text-center">No Products available</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Content -->
+<!-- Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-sm bg-primary">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="font-size: 13px"></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

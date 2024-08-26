@@ -1,0 +1,64 @@
+{% extends "dashboard-layout.html" %}
+{% block title %}Transaction History{% endblock %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.post(
+            '/status',
+            function(response){
+                location.href = '/inactive'
+            }
+        );
+    });
+</script> 
+  <div class="container mt-5">
+    {% if msg|length %}
+        <div class="alert alert-info">
+            {{msg}}
+        </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Transaction History</h5>
+        {% if transactions_count %}
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Product Image</th>
+                  <th>Quantity</th>
+                  <th>Amount</th>
+                  <th>Transaction ID</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for transaction in transactions %}
+                  {% set product = getProductDataById(transaction.product_id) %}
+                  <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{product.name}}</td>
+                    <td>{{getCategoryNameById(product.category_id)}}</td>
+                    <td>{{product.price}}</td>
+                    <td><img src="/static/uploads/{{product.thumbnail}}" style="width:100px;height:100px;"></td>
+                    <td>{{transaction.quantity}}</td>
+                    <td>{{ transaction.quantity|int * product.price|int }}</td>
+                    <td>TXN{{transaction.txn_id}}</td>
+                    <td>{{transaction.date}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <h6 class="text-center">No transactions.</h6>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
